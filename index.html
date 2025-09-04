@@ -61,11 +61,6 @@
             display: flex; align-items: center; justify-content: center;
             border-radius: 0.5rem; cursor: pointer;
         }
-        .category-tag {
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
-        }
         .serial-tag {
             background-color: var(--card-bg);
             color: var(--text-color);
@@ -104,7 +99,7 @@
         <section class="mb-6 max-w-2xl mx-auto">
             <label for="serial-search-input" class="block text-lg font-medium mb-2 text-center">Search for a Serial</label>
             <div class="flex">
-                <input type="text" id="serial-search-input" placeholder="e.g., Kyunki Saas Bhi Kabhi Bahu Thi" class="w-full p-3 rounded-l-md" style="background-color: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color);">
+                <input type="text" id="serial-search-input" placeholder="e.g., Big boss 19" class="w-full p-3 rounded-l-md" style="background-color: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color);">
                 <button id="serial-search-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-r-md">Search</button>
             </div>
             <div class="mt-4 p-3 rounded-md bg-sky-900 text-sky-100 text-sm text-center border border-sky-700">
@@ -152,10 +147,6 @@
                     <input type="number" id="episode-number" placeholder="e.g., 101" class="w-full p-2 rounded-md" style="background-color: var(--input-bg); border: 1px solid var(--border-color);">
                 </div>
             </div>
-             <div class="mt-4">
-                <label for="video-date" class="block text-sm font-medium mb-2">Date</label>
-                <input type="date" id="video-date" class="w-full p-2 rounded-md" style="background-color: var(--input-bg); border: 1px solid var(--border-color); color-scheme: dark;">
-            </div>
             <div class="mt-6 text-right">
                 <button id="upload-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">Add Episode</button>
             </div>
@@ -163,10 +154,9 @@
 
         <!-- Episode Filter Section (Hidden by default) -->
         <section id="episode-filter-section" class="mb-6 max-w-2xl mx-auto hidden">
-            <label for="episode-filter-input" class="block text-lg font-medium mb-2 text-center">Filter Episodes by Number or Date</label>
-            <input type="text" id="episode-filter-input" placeholder="e.g., 101 or 2024-08-15" class="w-full p-3 rounded-md" style="background-color: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color);">
+            <label for="episode-filter-input" class="block text-lg font-medium mb-2 text-center">Filter by Episode Number</label>
+            <input type="text" id="episode-filter-input" placeholder="e.g., 101" class="w-full p-3 rounded-md" style="background-color: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color);">
         </section>
-
 
         <!-- Video Gallery -->
         <main id="video-gallery-container">
@@ -174,10 +164,12 @@
         </main>
     </div>
 
-    <!-- Modals (Payment, Admin) -->
+    <!-- MODALS -->
+
+    <!-- Payment Modal -->
     <div id="payment-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
         <div style="color: var(--modal-text); background-color: var(--modal-bg);" class="rounded-lg shadow-2xl p-8 max-w-sm w-full text-center">
-            <h3 class="text-2xl font-bold mb-2">Unlock Everything for the Day!</h3>
+            <h3 class="text-2xl font-bold mb-2">Unlock All Episodes!</h3>
             <p class="mb-4">1. Scan the QR code with any UPI app to pay ₹1.</p>
             <div class="flex justify-center mb-4">
                 <img src="https://i.ibb.co/zVctYVCK/Whats-App-Image-2025-09-03-at-11-59-10-AM.jpg" alt="UPI QR Code" class="border rounded-md w-48 h-48">
@@ -194,6 +186,8 @@
             </div>
         </div>
     </div>
+    
+    <!-- Admin Login Modal -->
     <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
         <div style="color: var(--modal-text); background-color: var(--modal-bg);" class="rounded-lg shadow-2xl p-8 max-w-sm w-full">
             <h3 class="text-2xl font-bold mb-4">Admin Login</h3>
@@ -207,15 +201,54 @@
         </div>
     </div>
 
-    <!-- Success Toast Notification -->
-    <div id="success-toast" class="hidden fixed bottom-5 right-5 bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg transition-transform transform translate-y-20">
-        Episode added successfully!
+    <!-- Edit Episode Modal -->
+    <div id="edit-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
+        <div style="color: var(--modal-text); background-color: var(--modal-bg);" class="rounded-lg shadow-2xl p-8 max-w-lg w-full">
+            <h3 class="text-2xl font-bold mb-6">Edit Episode</h3>
+            <input type="hidden" id="edit-video-id">
+            <div class="space-y-4">
+                <div>
+                    <label for="edit-serial-name" class="block text-sm font-medium mb-1">Serial Name</label>
+                    <input type="text" id="edit-serial-name" class="w-full p-2 border border-gray-300 rounded-md text-gray-800">
+                </div>
+                <div>
+                    <label for="edit-video-file" class="block text-sm font-medium mb-1">Video File URL</label>
+                    <input type="text" id="edit-video-file" class="w-full p-2 border border-gray-300 rounded-md text-gray-800">
+                </div>
+                <div>
+                    <label for="edit-episode-number" class="block text-sm font-medium mb-1">Episode Number</label>
+                    <input type="number" id="edit-episode-number" class="w-full p-2 border border-gray-300 rounded-md text-gray-800">
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3 mt-8">
+                 <button id="edit-cancel-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg">Cancel</button>
+                 <button id="edit-save-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Save Changes</button>
+            </div>
+        </div>
     </div>
+
+    <!-- Delete Confirmation Modal -->
+     <div id="delete-confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
+        <div style="color: var(--modal-text); background-color: var(--modal-bg);" class="rounded-lg shadow-2xl p-8 max-w-sm w-full text-center">
+            <h3 class="text-2xl font-bold mb-4">Are you sure?</h3>
+            <p class="mb-6">This episode will be permanently deleted. This action cannot be undone.</p>
+            <div class="flex justify-center space-x-4">
+                 <button id="delete-cancel-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-6 rounded-lg">Cancel</button>
+                 <button id="delete-confirm-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="success-toast" class="hidden fixed bottom-5 right-5 bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg transition-transform transform translate-y-20">
+        Action successful!
+    </div>
+
 
     <script type="module">
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, onSnapshot, doc, runTransaction, increment } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, onSnapshot, doc, runTransaction, increment, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -232,7 +265,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- GLOBAL DATA (now fetched from Firebase) ---
+        // --- GLOBAL DATA ---
         let videoData = [];
 
         // --- DOM ELEMENTS ---
@@ -250,6 +283,7 @@
         const episodeFilterInput = document.getElementById('episode-filter-input');
         const visitorCounter = document.getElementById('visitor-counter');
         const visitorCountSpan = document.getElementById('visitor-count-span');
+        const successToast = document.getElementById('success-toast');
 
         // Admin elements
         const uploadSection = document.getElementById('upload-section');
@@ -262,24 +296,39 @@
         const loginCancelBtn = document.getElementById('login-cancel-btn');
         const errorMessage = document.getElementById('error-message');
 
+        // Edit Modal elements
+        const editModal = document.getElementById('edit-modal');
+        const editVideoId = document.getElementById('edit-video-id');
+        const editSerialName = document.getElementById('edit-serial-name');
+        const editVideoFile = document.getElementById('edit-video-file');
+        const editEpisodeNumber = document.getElementById('edit-episode-number');
+        const editSaveBtn = document.getElementById('edit-save-btn');
+        const editCancelBtn = document.getElementById('edit-cancel-btn');
+
+        // Delete Modal elements
+        const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+        const deleteConfirmBtn = document.getElementById('delete-confirm-btn');
+        const deleteCancelBtn = document.getElementById('delete-cancel-btn');
+
         // --- STATE MANAGEMENT ---
-        let currentlySelectedDate = null;
-        let unlockedDates = new Set();
+        let unlockedSerials = new Set();
         const ADMIN_PASSWORD = 'Vn8s$Kz@P5qR';
         let currentSerial = '';
-        let currentSerialVideos = []; // Holds videos for the currently searched serial
+        let currentSerialVideos = [];
+        let isAdminLoggedIn = false;
+        let videoIdToDelete = null;
 
         // --- FUNCTIONS ---
         
         function handlePaymentVerification() {
             const upiId = upiIdInput.value.trim();
             if (upiId.length === 12 && /^\d+$/.test(upiId)) {
-                 if (currentlySelectedDate) {
-                    unlockedDates.add(currentlySelectedDate);
+                if (currentSerial) {
+                    unlockedSerials.add(currentSerial.toLowerCase());
                     paymentModal.classList.add('hidden');
                     upiIdInput.value = '';
                     upiErrorMessage.classList.add('hidden');
-                    renderGallery(currentSerial);
+                    renderGallery(currentSerial); // Re-render to show unlocked videos
                 }
             } else {
                 upiErrorMessage.classList.remove('hidden');
@@ -308,42 +357,28 @@
                 return;
             }
             
-            const groupedVideos = videoList.reduce((acc, video) => {
-                (acc[video.date] = acc[video.date] || []).push(video);
-                return acc;
-            }, {});
+            // Sort videos by episode number numerically
+            const sortedVideos = videoList.sort((a, b) => Number(a.episode) - Number(b.episode));
 
-            const sortedDates = Object.keys(groupedVideos).sort((a, b) => new Date(b) - new Date(a));
-
-            for (const date of sortedDates) {
-                const videos = groupedVideos[date];
-                const dateSection = document.createElement('section');
-                dateSection.className = 'mb-10';
-                
-                const formattedDate = new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-
-                dateSection.innerHTML = `
-                    <h2 class="text-2xl font-bold pb-2 mb-6" style="border-bottom: 2px solid var(--border-color);">${formattedDate}</h2>
+            galleryContainer.innerHTML = `
+                <section class="mb-10">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        ${videos.map(video => createVideoCard(video)).join('')}
+                        ${sortedVideos.map(video => createVideoCard(video)).join('')}
                     </div>
-                `;
-                galleryContainer.appendChild(dateSection);
-            }
+                </section>
+            `;
+            
             addCardEventListeners();
         }
-
 
         function renderGallery(serialName) {
             currentSerial = serialName;
             const lowerCaseSerial = serialName.toLowerCase().trim();
-
             currentSerialVideos = videoData.filter(
                 video => video.serialName.toLowerCase().trim() === lowerCaseSerial
             );
-
             if (currentSerialVideos.length === 0) {
-                galleryContainer.innerHTML = `<p class="text-center text-lg" style="color: var(--text-color-muted);">No videos found for "${serialName}". Please check the spelling.</p>`;
+                 galleryContainer.innerHTML = `<p class="text-center text-lg" style="color: var(--text-color-muted);">No videos found for "${serialName}". Please check the spelling.</p>`;
                 episodeFilterSection.classList.add('hidden');
             } else {
                 episodeFilterSection.classList.remove('hidden');
@@ -353,43 +388,63 @@
         }
 
         function createVideoCard(video) {
-            const isUnlocked = unlockedDates.has(video.date);
-            const lockClass = isUnlocked ? '' : 'locked';
+            const isUnlocked = unlockedSerials.has(video.serialName.toLowerCase());
+            const lockClass = (isUnlocked || isAdminLoggedIn) ? '' : 'locked';
+            
+            const adminButtons = isAdminLoggedIn ? `
+                <div class="absolute top-2 right-2 flex space-x-2">
+                    <button class="edit-btn p-1.5 bg-blue-600 rounded-full hover:bg-blue-700" data-id="${video.id}">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L14.732 3.732z"></path></svg>
+                    </button>
+                    <button class="delete-btn p-1.5 bg-red-600 rounded-full hover:bg-red-700" data-id="${video.id}">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+            ` : '';
 
             return `
-                <div class="video-card rounded-lg overflow-hidden shadow-lg" data-date="${video.date}" data-url="${video.videoUrl}">
+                <div class="video-card rounded-lg overflow-hidden shadow-lg relative" data-url="${video.videoUrl}" data-id="${video.id}">
                     <div class="relative ${lockClass}">
-                        <img src="${video.thumbnail}" alt="Episode ${video.episode}" class="w-full h-48 object-cover">
+                        <img src="${video.thumbnail}" alt="Episode ${video.episode}" class="w-full h-48 object-cover cursor-pointer">
+                        ${adminButtons}
                     </div>
                     <div class="p-4">
                         <h3 class="font-semibold text-lg">Episode ${video.episode}</h3>
                         ${isUnlocked ? `
                             <button class="download-btn mt-2 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm">Download</button>
-                        ` : `
-                            <p class="text-sm" style="color: var(--text-color-muted);">Date: ${video.date}</p>
-                        `}
+                        ` : ''}
                     </div>
                 </div>
             `;
         }
         
         function addCardEventListeners() {
-            document.querySelectorAll('.video-card').forEach(card => {
-                card.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('download-btn')) {
-                        window.open(card.dataset.url, '_blank');
-                        return;
-                    }
-
-                    const date = card.dataset.date;
-                    if (unlockedDates.has(date)) {
+             document.querySelectorAll('.video-card img').forEach(cardImage => {
+                cardImage.addEventListener('click', () => {
+                    const card = cardImage.closest('.video-card');
+                    const isUnlocked = unlockedSerials.has(currentSerial.toLowerCase());
+                    
+                    if (isUnlocked || isAdminLoggedIn) {
                         window.open(card.dataset.url, '_blank');
                     } else {
-                        currentlySelectedDate = date;
                         paymentModal.classList.remove('hidden');
                     }
                 });
             });
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                 btn.addEventListener('click', () => window.open(btn.closest('.video-card').dataset.url, '_blank'));
+            });
+
+            if (isAdminLoggedIn) {
+                document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openEditModal(btn.dataset.id);
+                }));
+                document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openDeleteConfirm(btn.dataset.id);
+                }));
+            }
         }
         
         function applyTheme(theme) {
@@ -409,31 +464,34 @@
 
         function handleAdminLogin() {
              if (adminPasswordInput.value === ADMIN_PASSWORD) {
+                isAdminLoggedIn = true;
                 adminModal.classList.add('hidden');
                 uploadSection.classList.remove('hidden');
                 adminLoginBtn.classList.add('hidden');
                 adminLogoutBtn.classList.remove('hidden');
-                visitorCounter.classList.remove('hidden'); // Show visitor counter
+                visitorCounter.classList.remove('hidden');
                 adminPasswordInput.value = '';
                 errorMessage.classList.add('hidden');
+                if(currentSerial) renderGallery(currentSerial);
             } else {
                 errorMessage.classList.remove('hidden');
             }
         }
         function handleAdminLogout() {
+             isAdminLoggedIn = false;
              uploadSection.classList.add('hidden');
              adminLoginBtn.classList.remove('hidden');
              adminLogoutBtn.classList.add('hidden');
-             visitorCounter.classList.add('hidden'); // Hide visitor counter
+             visitorCounter.classList.add('hidden');
+             if(currentSerial) renderGallery(currentSerial);
         }
 
-        function showSuccessToast() {
-            const toast = document.getElementById('success-toast');
-            toast.classList.remove('hidden');
-            toast.classList.remove('translate-y-20');
+        function showSuccessToast(message = "Action successful!") {
+            successToast.textContent = message;
+            successToast.classList.remove('hidden', 'translate-y-20');
             setTimeout(() => {
-                toast.classList.add('translate-y-20');
-                setTimeout(() => toast.classList.add('hidden'), 300);
+                successToast.classList.add('translate-y-20');
+                setTimeout(() => successToast.classList.add('hidden'), 300);
             }, 3000);
         }
 
@@ -441,34 +499,77 @@
             const serialName = document.getElementById('serial-name').value.trim();
             const videoUrl = document.getElementById('video-file').value.trim();
             const episodeNumber = document.getElementById('episode-number').value.trim();
-            const videoDate = document.getElementById('video-date').value;
-
-            if (!serialName || !videoUrl || !episodeNumber || !videoDate) {
+            
+            if (!serialName || !videoUrl || !episodeNumber) {
                 alert('Please fill out all fields in the admin form.');
                 return;
             }
 
             const newVideo = {
                 serialName: serialName,
-                date: videoDate,
                 episode: episodeNumber,
                 thumbnail: `https://placehold.co/600x400/1e293b/ffffff?text=Episode+${episodeNumber}`,
                 videoUrl: videoUrl
             };
             
             try {
-                const docRef = await addDoc(collection(db, "videos"), newVideo);
-                console.log("Document written to Firebase with ID: ", docRef.id);
-                showSuccessToast();
-
+                await addDoc(collection(db, "videos"), newVideo);
+                showSuccessToast("Episode added successfully!");
                 document.getElementById('serial-name').value = '';
                 document.getElementById('video-file').value = '';
                 document.getElementById('episode-number').value = '';
-                document.getElementById('video-date').value = '';
-
             } catch (e) {
                 console.error("Error adding document: ", e);
                 alert("Error saving episode. Check console for details.");
+            }
+        }
+
+        function openEditModal(videoId) {
+            const video = videoData.find(v => v.id === videoId);
+            if(video) {
+                editVideoId.value = video.id;
+                editSerialName.value = video.serialName;
+                editVideoFile.value = video.videoUrl;
+                editEpisodeNumber.value = video.episode;
+                editModal.classList.remove('hidden');
+            }
+        }
+
+        async function handleUpdateEpisode() {
+            const videoId = editVideoId.value;
+            const updatedData = {
+                serialName: editSerialName.value,
+                videoUrl: editVideoFile.value,
+                episode: editEpisodeNumber.value,
+                thumbnail: `https://placehold.co/600x400/1e293b/ffffff?text=Episode+${editEpisodeNumber.value}`
+            };
+
+            const videoRef = doc(db, "videos", videoId);
+            try {
+                await updateDoc(videoRef, updatedData);
+                editModal.classList.add('hidden');
+                showSuccessToast("Episode updated successfully!");
+            } catch (e) {
+                console.error("Error updating document: ", e);
+                alert("Error updating episode. Check console.");
+            }
+        }
+
+        function openDeleteConfirm(videoId) {
+            videoIdToDelete = videoId;
+            deleteConfirmModal.classList.remove('hidden');
+        }
+
+        async function handleDeleteEpisode() {
+            if (!videoIdToDelete) return;
+            try {
+                await deleteDoc(doc(db, "videos", videoIdToDelete));
+                deleteConfirmModal.classList.add('hidden');
+                showSuccessToast("Episode deleted successfully!");
+                videoIdToDelete = null;
+            } catch (e) {
+                console.error("Error deleting document: ", e);
+                alert("Error deleting episode. Check console.");
             }
         }
 
@@ -490,7 +591,6 @@
                 }
             });
         }
-
         async function updateVisitorCount() {
             const counterRef = doc(db, "analytics", "visitorCounter");
             try {
@@ -499,8 +599,7 @@
                     if (!counterDoc.exists()) {
                         transaction.set(counterRef, { count: 1 });
                     } else {
-                        const newCount = counterDoc.data().count + 1;
-                        transaction.update(counterRef, { count: newCount });
+                        transaction.update(counterRef, { count: increment(1) });
                     }
                 });
             } catch (e) {
@@ -519,8 +618,6 @@
             });
         }
 
-
-        // --- EVENT LISTENERS ---
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             applyTheme(savedTheme);
@@ -530,9 +627,9 @@
                 applyTheme(newTheme);
             });
             
-            fetchVideos(); // Fetch initial data from Firebase
-            updateVisitorCount(); // Increment visitor count on page load
-            listenForVisitorCount(); // Listen for real-time updates for the admin
+            fetchVideos();
+            updateVisitorCount();
+            listenForVisitorCount();
 
             cancelButton.addEventListener('click', () => paymentModal.classList.add('hidden'));
             verifyPaymentBtn.addEventListener('click', handlePaymentVerification);
@@ -541,7 +638,6 @@
                 const searchTerm = serialSearchInput.value;
                 if (searchTerm.trim() !== '') {
                     renderGallery(searchTerm);
-                    // ADDED: Smooth scroll to the results after a short delay
                     setTimeout(() => {
                         episodeFilterSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }, 100);
@@ -556,8 +652,7 @@
             episodeFilterInput.addEventListener('input', () => {
                 const filterTerm = episodeFilterInput.value.toLowerCase().trim();
                 const filteredVideos = currentSerialVideos.filter(video => 
-                    video.episode.toString().includes(filterTerm) || 
-                    video.date.includes(filterTerm)
+                    video.episode.toString().includes(filterTerm)
                 );
                 displayVideos(filteredVideos);
             });
@@ -567,8 +662,14 @@
             loginSubmitBtn.addEventListener('click', handleAdminLogin);
             adminLogoutBtn.addEventListener('click', handleAdminLogout);
             uploadBtn.addEventListener('click', handleUpload);
+            
+            editSaveBtn.addEventListener('click', handleUpdateEpisode);
+            editCancelBtn.addEventListener('click', () => editModal.classList.add('hidden'));
+            deleteConfirmBtn.addEventListener('click', handleDeleteEpisode);
+            deleteCancelBtn.addEventListener('click', () => deleteConfirmModal.classList.add('hidden'));
         });
     </script>
 </body>
 </html>
+
 

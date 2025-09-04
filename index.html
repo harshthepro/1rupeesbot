@@ -31,6 +31,10 @@
             --text-color-muted: #4b5563;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
@@ -537,6 +541,10 @@
                 const searchTerm = serialSearchInput.value;
                 if (searchTerm.trim() !== '') {
                     renderGallery(searchTerm);
+                    // ADDED: Smooth scroll to the results after a short delay
+                    setTimeout(() => {
+                        episodeFilterSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
                 }
             });
             serialSearchInput.addEventListener('keyup', (e) => {
